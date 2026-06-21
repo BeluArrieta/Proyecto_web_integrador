@@ -30,6 +30,11 @@ public class VentaController {
         return ventaService.buscar(idVenta);
     }
 
+    @GetMapping
+    public List<VentaDTO> listarTodas() {
+        return ventaService.listarTodas();
+    }
+
     @GetMapping("/cliente/{idCliente}")
     public List<VentaDTO> historialCliente(@PathVariable String idCliente) {
         return ventaService.historialCliente(idCliente);

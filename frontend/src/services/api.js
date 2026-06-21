@@ -21,6 +21,10 @@ async function request(endpoint, options = {}) {
   return data;
 }
 
+export const authService = {
+  login: (credenciales) => request('/auth/login', { method: 'POST', body: JSON.stringify(credenciales) })
+};
+
 export const productoService = {
   listar: () => request('/productos'),
   crear: (producto) => request('/productos', { method: 'POST', body: JSON.stringify(producto) }),
@@ -35,6 +39,7 @@ export const clienteService = {
 };
 
 export const ventaService = {
+  listar: () => request('/ventas'),
   registrar: (venta) => request('/ventas', { method: 'POST', body: JSON.stringify(venta) }),
   buscar: (idVenta) => request(`/ventas/${idVenta}`),
   historialCliente: (idCliente) => request(`/ventas/cliente/${idCliente}`)

@@ -94,6 +94,14 @@ public class VentaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<VentaDTO> listarTodas() {
+        return ventaRepository.findAllByOrderByFechaEmisionDesc()
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
     public VentaDTO toDTO(Venta venta) {
         List<DetalleVentaDTO> detalles = detalleVentaRepository.findByVentaIdVenta(venta.getIdVenta())
                 .stream()

@@ -1,15 +1,22 @@
-import { BarChart3, History, LogOut, Package, ShoppingCart, UserPlus } from 'lucide-react';
+import { BarChart3, FileText, History, LogOut, Package, ShoppingCart, UserRound } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export default function Navbar({ vista, setVista }) {
-  const { cliente, carrito, cerrarSesion } = useApp();
+  const { sesion, esAdmin, carrito, cerrarSesion } = useApp();
 
-  const opciones = [
-    { id: 'productos', texto: 'Productos', icono: Package },
+  const opcionesCliente = [
+    { id: 'productos', texto: 'Catálogo de compras', icono: Package },
     { id: 'carrito', texto: `Carrito (${carrito.length})`, icono: ShoppingCart },
-    { id: 'historial', texto: 'Historial', icono: History },
-    { id: 'dashboard', texto: 'Dashboard', icono: BarChart3 }
+    { id: 'historial', texto: 'Historial avanzado', icono: History }
   ];
+
+  const opcionesAdmin = [
+    { id: 'dashboard', texto: 'Estadísticas', icono: BarChart3 },
+    { id: 'historial', texto: 'Historial y ventas', icono: History },
+    { id: 'reportes', texto: 'Reportes', icono: FileText }
+  ];
+
+  const opciones = esAdmin ? opcionesAdmin : opcionesCliente;
 
   return (
     <aside className="sidebar">
@@ -17,7 +24,7 @@ export default function Navbar({ vista, setVista }) {
         <div className="logoIcono">TZ</div>
         <div>
           <h1>TechZone</h1>
-          <span>Sistema de ventas</span>
+          <span>{esAdmin ? 'Panel administrador' : 'Tienda online'}</span>
         </div>
       </div>
 
@@ -38,19 +45,12 @@ export default function Navbar({ vista, setVista }) {
       </nav>
 
       <div className="usuarioBox">
-        {cliente ? (
-          <>
-            <strong>{cliente.nombre} {cliente.apellido}</strong>
-            <span>{cliente.correo || cliente.idCliente}</span>
-            <button className="btnSalir" onClick={cerrarSesion}>
-              <LogOut size={16} /> Cerrar sesión
-            </button>
-          </>
-        ) : (
-          <button className="btnSalir" onClick={() => setVista('login')}>
-            <UserPlus size={16} /> Iniciar sesión
-          </button>
-        )}
+        <div className="usuarioAvatar"><UserRound size={18} /></div>
+        <strong>{sesion?.nombre} {sesion?.apellido}</strong>
+        <span>{sesion?.rol === 'ADMIN' ? 'Administrador' : sesion?.correo || sesion?.id}</span>
+        <button className="btnSalir" onClick={cerrarSesion}>
+          <LogOut size={16} /> Cerrar sesión
+        </button>
       </div>
     </aside>
   );

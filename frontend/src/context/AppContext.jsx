@@ -3,8 +3,8 @@ import { createContext, useContext, useMemo, useState } from 'react';
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
-  const [cliente, setCliente] = useState(() => {
-    const guardado = localStorage.getItem('cliente');
+  const [sesion, setSesion] = useState(() => {
+    const guardado = localStorage.getItem('sesion');
     return guardado ? JSON.parse(guardado) : null;
   });
   const [carrito, setCarrito] = useState(() => {
@@ -12,15 +12,21 @@ export function AppProvider({ children }) {
     return guardado ? JSON.parse(guardado) : [];
   });
 
-  function guardarCliente(nuevoCliente) {
-    setCliente(nuevoCliente);
-    localStorage.setItem('cliente', JSON.stringify(nuevoCliente));
+  const cliente = sesion?.rol === 'CLIENTE' ? sesion : null;
+  const esAdmin = sesion?.rol === 'ADMIN';
+
+  function guardarSesion(nuevaSesion) {
+    setSesion(nuevaSesion);
+    localStorage.setItem('sesion', JSON.stringify(nuevaSesion));
+    if (nuevaSesion?.rol !== 'CLIENTE') {
+      guardarCarrito([]);
+    }
   }
 
   function cerrarSesion() {
-    setCliente(null);
+    setSesion(null);
     setCarrito([]);
-    localStorage.removeItem('cliente');
+    localStorage.removeItem('sesion');
     localStorage.removeItem('carrito');
   }
 
@@ -36,7 +42,7 @@ export function AppProvider({ children }) {
     if (existe) {
       actualizado = carrito.map((item) =>
         item.idProducto === producto.idProducto
-          ? { ...item, cantidad: item.cantidad + 1 }
+          ? { ...item, cantidad: Math.min(Number(item.stock), item.cantidad + 1) }
           : item
       );
     } else {
@@ -49,9 +55,10 @@ export function AppProvider({ children }) {
   function cambiarCantidad(idProducto, cantidad) {
     const nuevaCantidad = Math.max(1, Number(cantidad));
     guardarCarrito(
-      carrito.map((item) =>
-        item.idProducto === idProducto ? { ...item, cantidad: nuevaCantidad } : item
-      )
+      carrito.map((item) => {
+        if (item.idProducto !== idProducto) return item;
+        return { ...item, cantidad: Math.min(Number(item.stock), nuevaCantidad) };
+      })
     );
   }
 
@@ -71,10 +78,12 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        sesion,
         cliente,
+        esAdmin,
         carrito,
         total,
-        guardarCliente,
+        guardarSesion,
         cerrarSesion,
         agregarProducto,
         cambiarCantidad,

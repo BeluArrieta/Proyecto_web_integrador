@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+import { CreditCard, Trash2, WalletCards } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { formatoMoneda } from '../utils/format';
@@ -8,18 +8,27 @@ import Alerta from '../components/Alerta';
 export default function Carrito({ setVista, setVentaGenerada }) {
   const { cliente, carrito, total, cambiarCantidad, quitarProducto, limpiarCarrito } = useApp();
   const [tipoDocumento, setTipoDocumento] = useState('TD001');
-  const [medioPago, setMedioPago] = useState('MP001');
+  const [medioPago, setMedioPago] = useState('MP004');
   const [numeroDocumento, setNumeroDocumento] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [exito, setExito] = useState('');
   const [cargando, setCargando] = useState(false);
+
+  const medios = [
+    { id: 'MP004', nombre: 'Yape' },
+    { id: 'MP005', nombre: 'Plin' },
+    { id: 'MP002', nombre: 'Crédito' },
+    { id: 'MP003', nombre: 'Débito' },
+    { id: 'MP001', nombre: 'Efectivo' },
+    { id: 'MP006', nombre: 'Transferencia' }
+  ];
 
   async function registrarVenta() {
     setMensaje('');
     setExito('');
 
     if (!cliente) {
-      setMensaje('Debes iniciar sesión antes de pagar.');
+      setMensaje('Debes iniciar sesión como cliente antes de pagar.');
       setVista('login');
       return;
     }
@@ -30,14 +39,11 @@ export default function Carrito({ setVista, setVentaGenerada }) {
     }
 
     const request = {
-      idCliente: cliente.idCliente,
+      idCliente: cliente.id,
       tipoDocumento,
       medioPago,
       numeroDocumento,
-      items: carrito.map((item) => ({
-        idProducto: item.idProducto,
-        cantidad: item.cantidad
-      }))
+      items: carrito.map((item) => ({ idProducto: item.idProducto, cantidad: item.cantidad }))
     };
 
     setCargando(true);
@@ -56,10 +62,11 @@ export default function Carrito({ setVista, setVentaGenerada }) {
 
   return (
     <section>
-      <div className="pageHeader">
+      <div className="heroPanel carritoHero">
         <div>
-          <h2>Carrito de compras</h2>
-          <p>Revisa los productos antes de registrar la venta.</p>
+          <span className="miniTag">Carrito</span>
+          <h2>Resumen de compra</h2>
+          <p>Selecciona el comprobante y el método de pago antes de confirmar.</p>
         </div>
       </div>
 
@@ -71,6 +78,12 @@ export default function Carrito({ setVista, setVentaGenerada }) {
       ) : (
         <div className="carritoLayout">
           <div className="tablaCard">
+            <div className="tablaHeader">
+              <div>
+                <h3>Productos seleccionados</h3>
+                <p>{carrito.length} producto(s) en tu pedido.</p>
+              </div>
+            </div>
             <table>
               <thead>
                 <tr>
@@ -108,8 +121,9 @@ export default function Carrito({ setVista, setVentaGenerada }) {
             </table>
           </div>
 
-          <aside className="resumenCard">
-            <h3>Resumen de pago</h3>
+          <aside className="resumenCard resumenPagoModerno">
+            <div className="pagoIcono"><WalletCards size={24} /></div>
+            <h3>Pago</h3>
             <label>
               Tipo de documento
               <select value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)}>
@@ -119,16 +133,18 @@ export default function Carrito({ setVista, setVentaGenerada }) {
             </label>
             <label>
               Medio de pago
-              <select value={medioPago} onChange={(e) => setMedioPago(e.target.value)}>
-                <option value="MP001">Efectivo</option>
-                <option value="MP002">Tarjeta de crédito</option>
-                <option value="MP003">Tarjeta de débito</option>
-                <option value="MP004">Yape</option>
-                <option value="MP005">Plin</option>
-                <option value="MP006">Transferencia</option>
-                <option value="MP009">Visa</option>
-                <option value="MP010">Mastercard</option>
-              </select>
+              <div className="metodosPago">
+                {medios.map((medio) => (
+                  <button
+                    type="button"
+                    key={medio.id}
+                    className={medioPago === medio.id ? 'seleccionado' : ''}
+                    onClick={() => setMedioPago(medio.id)}
+                  >
+                    <CreditCard size={15} /> {medio.nombre}
+                  </button>
+                ))}
+              </div>
             </label>
             <label>
               Número documento del cliente
@@ -138,7 +154,7 @@ export default function Carrito({ setVista, setVentaGenerada }) {
               <span>Total</span>
               <strong>{formatoMoneda(total)}</strong>
             </div>
-            <button className="btnPrincipal" disabled={cargando} onClick={registrarVenta}>
+            <button className="btnPrincipal btnGrande" disabled={cargando} onClick={registrarVenta}>
               {cargando ? 'Registrando...' : 'Realizar pago'}
             </button>
           </aside>

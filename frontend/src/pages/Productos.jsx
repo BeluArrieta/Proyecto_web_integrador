@@ -3,6 +3,7 @@ import ProductoCard from '../components/ProductoCard';
 import Alerta from '../components/Alerta';
 import { productoService } from '../services/api';
 import { useApp } from '../context/AppContext';
+import { Search } from 'lucide-react';
 
 export default function Productos() {
   const { agregarProducto } = useApp();
@@ -40,17 +41,21 @@ export default function Productos() {
 
   return (
     <section>
-      <div className="pageHeader">
+      <div className="heroPanel catalogoHero">
         <div>
-          <h2>Catálogo de productos</h2>
-          <p>Selecciona los productos para agregarlos al carrito.</p>
+          <span className="miniTag">Catálogo de compras</span>
+          <h2>Elige tus productos</h2>
+          <p>Busca, filtra por categoría y agrega productos al carrito de forma rápida.</p>
         </div>
       </div>
 
       <Alerta tipo="error" mensaje={mensaje} />
 
-      <div className="filtros">
-        <input placeholder="Buscar producto..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+      <div className="filtros filtrosCliente">
+        <div className="inputIcono">
+          <Search size={18} />
+          <input placeholder="Buscar producto..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+        </div>
         <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
           {categorias.map((cat) => <option key={cat}>{cat}</option>)}
         </select>

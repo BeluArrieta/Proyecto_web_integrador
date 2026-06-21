@@ -8,6 +8,8 @@ import pe.edu.utp.techzone.repository.ClienteRepository;
 import pe.edu.utp.techzone.repository.ProductoRepository;
 import pe.edu.utp.techzone.repository.VentaRepository;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -17,16 +19,28 @@ public class DashboardService {
 
     @Transactional(readOnly = true)
     public DashboardDTO obtenerResumen() {
-        String masVendido = ventaRepository.obtenerProductoMasVendidoMes();
-        if (masVendido == null || masVendido.isBlank()) {
-            masVendido = "Sin ventas";
-        }
+        String masVendidoMes = normalizarTexto(ventaRepository.obtenerProductoMasVendidoMes());
+        String masVendidoSemana = normalizarTexto(ventaRepository.obtenerProductoMasVendidoSemana());
 
         return DashboardDTO.builder()
                 .totalProductos(productoRepository.count())
                 .totalClientes(clienteRepository.count())
                 .productosAgotados(productoRepository.countByStockLessThanEqual(0))
-                .productoMasVendidoMes(masVendido)
+                .stockCritico((int) productoRepository.countByStockLessThanEqual(5))
+                .ventasSemana(ventaRepository.contarVentasSemana())
+                .clientesCompraron(ventaRepository.contarClientesCompraron())
+                .ingresosSemana(valor(ventaRepository.obtenerIngresosSemana()))
+                .ingresosMes(valor(ventaRepository.obtenerIngresosMes()))
+                .productoMasVendidoMes(masVendidoMes)
+                .productoMasVendidoSemana(masVendidoSemana)
                 .build();
+    }
+
+    private String normalizarTexto(String texto) {
+        return texto == null || texto.isBlank() ? "Sin ventas" : texto;
+    }
+
+    private BigDecimal valor(BigDecimal monto) {
+        return monto == null ? BigDecimal.ZERO : monto;
     }
 }

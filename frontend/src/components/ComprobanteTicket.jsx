@@ -32,8 +32,8 @@ export default function ComprobanteTicket({ venta }) {
   }
 
   const totalNum = Number(venta?.total || 0);
-  const opGravadaNum = totalNum / 1.18;
-  const igvNum = totalNum - opGravadaNum;
+  const opGravadaNum = Number(venta?.opGravada ?? (totalNum / (1 + Number(venta?.igvPorcentaje || 18) / 100)));
+  const igvNum = Number(venta?.igv ?? (totalNum - opGravadaNum));
 
   const totalStr = totalNum.toFixed(2);
   const opGravadaStr = opGravadaNum.toFixed(2);

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface VentaRepository extends JpaRepository<Venta, String> {
-    List<Venta> findByPersonaIdPersonaOrderByFechaEmisionDesc(String idPersona);
+    List<Venta> findByClienteIdClienteOrderByFechaEmisionDesc(String idCliente);
     List<Venta> findAllByOrderByFechaEmisionDesc();
 
     @Query(value = """
@@ -29,7 +29,7 @@ public interface VentaRepository extends JpaRepository<Venta, String> {
         FROM detalle_venta dv
         INNER JOIN producto p ON dv.id_producto = p.id_producto
         INNER JOIN venta v ON dv.id_venta = v.id_venta
-        WHERE v.fecha_emision >= CURRENT_DATE - 7
+        WHERE v.fecha_emision >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
         GROUP BY p.nombre
         ORDER BY SUM(dv.cantidad) DESC
         LIMIT 1
@@ -38,12 +38,12 @@ public interface VentaRepository extends JpaRepository<Venta, String> {
 
     @Query(value = """
         SELECT COUNT(*) FROM venta
-        WHERE fecha_emision >= CURRENT_DATE - 7
+        WHERE fecha_emision >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
         """, nativeQuery = true)
     long contarVentasSemana();
 
     @Query(value = """
-        SELECT COUNT(DISTINCT id_persona) FROM venta
+        SELECT COUNT(DISTINCT id_cliente) FROM venta
         """, nativeQuery = true)
     long contarClientesCompraron();
 
@@ -51,7 +51,7 @@ public interface VentaRepository extends JpaRepository<Venta, String> {
         SELECT COALESCE(SUM(dv.subtotal), 0)
         FROM detalle_venta dv
         INNER JOIN venta v ON dv.id_venta = v.id_venta
-        WHERE v.fecha_emision >= CURRENT_DATE - 7
+        WHERE v.fecha_emision >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
         """, nativeQuery = true)
     BigDecimal obtenerIngresosSemana();
 

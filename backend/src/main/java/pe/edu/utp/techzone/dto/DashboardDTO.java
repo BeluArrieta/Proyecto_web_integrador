@@ -19,6 +19,7 @@ public class DashboardDTO {
     private long clientesCompraron;
     private BigDecimal ingresosSemana;
     private BigDecimal ingresosMes;
+    private BigDecimal igvPorcentaje;
     private String productoMasVendidoMes;
     private String productoMasVendidoSemana;
     private Integer stockCritico;

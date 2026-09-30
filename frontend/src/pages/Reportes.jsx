@@ -43,7 +43,8 @@ export default function Reportes({ setVista, setVentaGenerada }) {
   }, [ventas]);
 
   const totalIngresos = Number(datos?.ingresosMes || 0);
-  const totalOpGravada = totalIngresos / 1.18;
+  const igvPorcentaje = Number(datos?.igvPorcentaje || 18);
+  const totalOpGravada = totalIngresos / (1 + igvPorcentaje / 100);
   const totalIgv = totalIngresos - totalOpGravada;
 
   function abrirComprobante(venta) {

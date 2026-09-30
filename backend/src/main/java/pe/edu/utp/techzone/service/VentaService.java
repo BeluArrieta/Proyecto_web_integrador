@@ -7,16 +7,19 @@ import pe.edu.utp.techzone.dto.DetalleVentaDTO;
 import pe.edu.utp.techzone.dto.ItemVentaRequest;
 import pe.edu.utp.techzone.dto.RegistrarVentaRequest;
 import pe.edu.utp.techzone.dto.VentaDTO;
+import pe.edu.utp.techzone.entity.Cliente;
 import pe.edu.utp.techzone.entity.DetalleVenta;
 import pe.edu.utp.techzone.entity.MedioPago;
 import pe.edu.utp.techzone.entity.Persona;
 import pe.edu.utp.techzone.entity.Producto;
 import pe.edu.utp.techzone.entity.TipoDocumento;
+import pe.edu.utp.techzone.entity.Usuario;
 import pe.edu.utp.techzone.entity.Venta;
 import pe.edu.utp.techzone.exception.NotFoundException;
 import pe.edu.utp.techzone.repository.DetalleVentaRepository;
 import pe.edu.utp.techzone.repository.MedioPagoRepository;
 import pe.edu.utp.techzone.repository.TipoDocumentoRepository;
+import pe.edu.utp.techzone.repository.UsuarioRepository;
 import pe.edu.utp.techzone.repository.VentaRepository;
 
 import java.math.BigDecimal;
@@ -27,16 +30,22 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class VentaService {
+    private static final String USUARIO_VENDEDOR = "admin";
     private final VentaRepository ventaRepository;
     private final DetalleVentaRepository detalleVentaRepository;
     private final TipoDocumentoRepository tipoDocumentoRepository;
     private final MedioPagoRepository medioPagoRepository;
     private final ClienteService clienteService;
     private final ProductoService productoService;
+    private final UsuarioRepository usuarioRepository;
+    private final ParametroService parametroService;
 
     @Transactional
     public VentaDTO registrar(RegistrarVentaRequest request) {
-        Persona persona = clienteService.obtenerPersonaDelCliente(request.getIdCliente());
+        Cliente cliente = clienteService.obtenerEntidad(request.getIdCliente());
+        Persona vendedor = usuarioRepository.findByUsuario(USUARIO_VENDEDOR)
+                .map(Usuario::getPersona)
+                .orElseThrow(() -> new NotFoundException("Usuario vendedor no encontrado"));
         TipoDocumento tipoDocumento = tipoDocumentoRepository.findById(request.getTipoDocumento())
                 .orElseThrow(() -> new NotFoundException("Tipo de documento no encontrado"));
         MedioPago medioPago = medioPagoRepository.findById(request.getMedioPago())
@@ -51,7 +60,8 @@ public class VentaService {
 
         Venta venta = Venta.builder()
                 .idVenta(idVenta)
-                .persona(persona)
+                .cliente(cliente)
+                .persona(vendedor)
                 .tipoDocumento(tipoDocumento)
                 .numeroDocumento(numeroDocumento)
                 .medioPago(medioPago)
@@ -87,8 +97,7 @@ public class VentaService {
 
     @Transactional(readOnly = true)
     public List<VentaDTO> historialCliente(String idCliente) {
-        Persona persona = clienteService.obtenerPersonaDelCliente(idCliente);
-        return ventaRepository.findByPersonaIdPersonaOrderByFechaEmisionDesc(persona.getIdPersona())
+        return ventaRepository.findByClienteIdClienteOrderByFechaEmisionDesc(idCliente)
                 .stream()
                 .map(this::toDTO)
                 .toList();
@@ -120,13 +129,16 @@ public class VentaService {
 
         return VentaDTO.builder()
                 .idVenta(venta.getIdVenta())
-                .idCliente(venta.getPersona().getIdPersona())
-                .cliente(venta.getPersona().getNombre() + " " + venta.getPersona().getApellido())
+                .idCliente(venta.getCliente().getIdCliente())
+                .cliente(venta.getCliente().getNombre() + " " + venta.getCliente().getApellido())
                 .tipoDocumento(venta.getTipoDocumento().getNombre())
                 .numeroDocumento(venta.getNumeroDocumento())
                 .medioPago(venta.getMedioPago().getDescripcion())
                 .fechaEmision(venta.getFechaEmision())
                 .total(total)
+                .opGravada(parametroService.calcularOpGravada(total))
+                .igv(parametroService.calcularIgv(total))
+                .igvPorcentaje(parametroService.obtenerIgvPorcentaje())
                 .detalles(detalles)
                 .build();
     }

@@ -25,6 +25,12 @@ public class Venta {
     @Column(name = "id_venta", length = 36)
     private String idVenta;
 
+    // Comprador
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", nullable = false)
+    private Cliente cliente;
+
+    // Vendedor / empleado que proceso la venta
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", nullable = false)
     private Persona persona;

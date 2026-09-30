@@ -18,7 +18,7 @@
     <description>Backend Spring Boot para Proyecto Integrador</description>
 
     <properties>
-        <java.version>26</java.version>
+        <java.version>24</java.version>
         <lombok.version>1.18.46</lombok.version>
     </properties>
 
@@ -40,8 +40,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -67,7 +67,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>26</release>
+                    <release>24</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

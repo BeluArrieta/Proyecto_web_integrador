@@ -16,6 +16,7 @@ public class DashboardService {
     private final ProductoRepository productoRepository;
     private final ClienteRepository clienteRepository;
     private final VentaRepository ventaRepository;
+    private final ParametroService parametroService;
 
     @Transactional(readOnly = true)
     public DashboardDTO obtenerResumen() {
@@ -31,6 +32,7 @@ public class DashboardService {
                 .clientesCompraron(ventaRepository.contarClientesCompraron())
                 .ingresosSemana(valor(ventaRepository.obtenerIngresosSemana()))
                 .ingresosMes(valor(ventaRepository.obtenerIngresosMes()))
+                .igvPorcentaje(parametroService.obtenerIgvPorcentaje())
                 .productoMasVendidoMes(masVendidoMes)
                 .productoMasVendidoSemana(masVendidoSemana)
                 .build();

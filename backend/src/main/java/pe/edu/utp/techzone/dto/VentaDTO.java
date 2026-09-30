@@ -22,5 +22,8 @@ public class VentaDTO {
     private String medioPago;
     private LocalDateTime fechaEmision;
     private BigDecimal total;
+    private BigDecimal opGravada;
+    private BigDecimal igv;
+    private BigDecimal igvPorcentaje;
     private List<DetalleVentaDTO> detalles;
 }

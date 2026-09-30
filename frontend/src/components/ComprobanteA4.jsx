@@ -33,6 +33,7 @@ export default function ComprobanteA4({ venta }) {
   }
 
   // Cálculos tributarios SUNAT (Perú). El IGV viene de la tabla parametro.
+  const fmt = (v) => Number(v ?? 0).toFixed(2);
   const totalNum = Number(venta?.total || 0);
   const opGravadaNum = Number(venta?.opGravada ?? (totalNum / (1 + Number(venta?.igvPorcentaje || 18) / 100)));
   const igvNum = Number(venta?.igv ?? (totalNum - opGravadaNum));
@@ -143,11 +144,12 @@ export default function ComprobanteA4({ venta }) {
         <table className="a4TablaProductos">
           <thead>
             <tr>
-              <th style={{ width: '10%' }}>CANTIDAD.</th>
-              <th style={{ width: '10%' }}>U.M</th>
-              <th style={{ width: '52%' }}>DESCRIPCIÓN</th>
-              <th style={{ width: '14%' }} className="text-right">PRECIO UNIT.</th>
-              <th style={{ width: '14%' }} className="text-right">IMPORTE (Inc. IGV)</th>
+              <th style={{ width: '8%' }}>CANT.</th>
+              <th style={{ width: '8%' }}>U.M</th>
+              <th style={{ width: '38%' }}>DESCRIPCIÓN</th>
+              <th style={{ width: '15%' }} className="text-right">VALOR UNIT.</th>
+              <th style={{ width: '15%' }} className="text-right">IGV</th>
+              <th style={{ width: '16%' }} className="text-right">IMPORTE TOTAL</th>
             </tr>
           </thead>
           <tbody>
@@ -155,23 +157,25 @@ export default function ComprobanteA4({ venta }) {
               venta.detalles.map((detalle, idx) => (
                 <tr key={idx} className="a4FilaItem">
                   <td className="text-center">{detalle.cantidad}</td>
-                  <td className="text-center">UNIDAD</td>
+                  <td className="text-center">NIU</td>
                   <td className="uppercase">{detalle.producto}</td>
-                  <td className="text-right">{Number(detalle.precioUnitario).toFixed(2)}</td>
-                  <td className="text-right">{Number(detalle.subtotal).toFixed(2)}</td>
+                  <td className="text-right">{fmt(detalle.valorUnitario)}</td>
+                  <td className="text-right">{fmt(detalle.igv)}</td>
+                  <td className="text-right">{fmt(detalle.subtotal)}</td>
                 </tr>
               ))
             ) : (
               <tr className="a4FilaItem">
                 <td className="text-center">1</td>
-                <td className="text-center">UNIDAD</td>
+                <td className="text-center">NIU</td>
                 <td className="uppercase">POLO BASICO TALLA SMALL</td>
-                <td className="text-right">20.00</td>
+                <td className="text-right">16.95</td>
+                <td className="text-right">3.05</td>
                 <td className="text-right">20.00</td>
               </tr>
             )}
             <tr className="a4FilaEspacio">
-              <td colSpan={5}></td>
+              <td colSpan={6}></td>
             </tr>
           </tbody>
         </table>

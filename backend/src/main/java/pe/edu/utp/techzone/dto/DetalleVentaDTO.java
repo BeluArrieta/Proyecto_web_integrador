@@ -16,5 +16,8 @@ public class DetalleVentaDTO {
     private String producto;
     private Integer cantidad;
     private BigDecimal precioUnitario;
+    private BigDecimal valorUnitario;
+    private BigDecimal valorTotal;
+    private BigDecimal igv;
     private BigDecimal subtotal;
 }

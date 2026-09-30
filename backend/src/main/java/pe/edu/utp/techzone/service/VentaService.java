@@ -23,6 +23,7 @@ import pe.edu.utp.techzone.repository.UsuarioRepository;
 import pe.edu.utp.techzone.repository.VentaRepository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -114,18 +115,42 @@ public class VentaService {
     public VentaDTO toDTO(Venta venta) {
         List<DetalleVentaDTO> detalles = detalleVentaRepository.findByVentaIdVenta(venta.getIdVenta())
                 .stream()
-                .map(detalle -> DetalleVentaDTO.builder()
-                        .idProducto(detalle.getProducto().getIdProducto())
-                        .producto(detalle.getProducto().getNombre())
-                        .cantidad(detalle.getCantidad())
-                        .precioUnitario(detalle.getPrecioUnitario())
-                        .subtotal(detalle.getSubtotal())
-                        .build())
+                .map(detalle -> {
+                    BigDecimal cantidad = BigDecimal.valueOf(detalle.getCantidad());
+                    BigDecimal igvLinea = parametroService.calcularIgvDeLinea(detalle.getSubtotal());
+                    // El valor de venta es el resto, asi la linea siempre cierra:
+                    // valorTotal + igv == subtotal, sin centimos perdidos.
+                    BigDecimal valorTotal = detalle.getSubtotal().subtract(igvLinea).setScale(2, RoundingMode.HALF_UP);
+                    BigDecimal valorUnitario = valorTotal.divide(cantidad, 2, RoundingMode.HALF_UP);
+
+                    return DetalleVentaDTO.builder()
+                            .idProducto(detalle.getProducto().getIdProducto())
+                            .producto(detalle.getProducto().getNombre())
+                            .cantidad(detalle.getCantidad())
+                            .precioUnitario(detalle.getPrecioUnitario())
+                            .valorUnitario(valorUnitario)
+                            .valorTotal(valorTotal)
+                            .igv(igvLinea)
+                            .subtotal(detalle.getSubtotal())
+                            .build();
+                })
                 .toList();
 
         BigDecimal total = detalles.stream()
                 .map(DetalleVentaDTO::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // SUNAT exige redondear por linea, no sobre el total. Asi los importes
+        // impresos siempre cuadran: suma(valorTotal) + suma(igv) == total.
+        BigDecimal opGravada = detalles.stream()
+                .map(DetalleVentaDTO::getValorTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal igv = detalles.stream()
+                .map(DetalleVentaDTO::getIgv)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
 
         return VentaDTO.builder()
                 .idVenta(venta.getIdVenta())
@@ -136,8 +161,8 @@ public class VentaService {
                 .medioPago(venta.getMedioPago().getDescripcion())
                 .fechaEmision(venta.getFechaEmision())
                 .total(total)
-                .opGravada(parametroService.calcularOpGravada(total))
-                .igv(parametroService.calcularIgv(total))
+                .opGravada(opGravada)
+                .igv(igv)
                 .igvPorcentaje(parametroService.obtenerIgvPorcentaje())
                 .detalles(detalles)
                 .build();

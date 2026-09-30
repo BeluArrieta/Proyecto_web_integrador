@@ -31,6 +31,7 @@ export default function ComprobanteTicket({ venta }) {
     correlativo = venta.numeroDocumento;
   }
 
+  const fmt = (v) => Number(v ?? 0).toFixed(2);
   const totalNum = Number(venta?.total || 0);
   const opGravadaNum = Number(venta?.opGravada ?? (totalNum / (1 + Number(venta?.igvPorcentaje || 18) / 100)));
   const igvNum = Number(venta?.igv ?? (totalNum - opGravadaNum));
@@ -102,7 +103,7 @@ export default function ComprobanteTicket({ venta }) {
         <span>Cant</span>
         <span>U.M</span>
         <span>COD</span>
-        <span>PRECIO</span>
+        <span>V.UNIT</span>
         <span>TOTAL</span>
       </div>
       <div className="ticketDescripcionLabel">DESCRIPCION</div>
@@ -115,8 +116,8 @@ export default function ComprobanteTicket({ venta }) {
                 <span>{detalle.cantidad}</span>
                 <span>UNIDAD</span>
                 <span>{String(9810007000000 + (detalle.idProducto || idx + 1)).substring(0, 13)}</span>
-                <span>{Number(detalle.precioUnitario).toFixed(2)}</span>
-                <span>{Number(detalle.subtotal).toFixed(2)}</span>
+                <span>{fmt(detalle.valorUnitario)}</span>
+                <span>{fmt(detalle.subtotal)}</span>
               </div>
               <div className="ticketItemNombre uppercase">{detalle.producto}</div>
             </div>
@@ -127,7 +128,7 @@ export default function ComprobanteTicket({ venta }) {
               <span>1</span>
               <span>UNIDAD</span>
               <span>9810007005004</span>
-              <span>20.00</span>
+              <span>16.95</span>
               <span>20.00</span>
             </div>
             <div className="ticketItemNombre uppercase">POLO BASICO TALLA SMALL</div>

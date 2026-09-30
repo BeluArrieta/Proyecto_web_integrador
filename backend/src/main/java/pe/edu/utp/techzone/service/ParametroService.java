@@ -23,25 +23,22 @@ public class ParametroService {
                 .orElse(VALOR_POR_DEFECTO);
     }
 
-    /**
-     * El precio de producto.precio ya incluye IGV, asi que se desagrega hacia atras.
-     * Ej: total 118.00 con 18% -> opGravada 100.00, igv 18.00
-     */
-    @Transactional(readOnly = true)
-    public BigDecimal calcularOpGravada(BigDecimal totalConIgv) {
-        if (totalConIgv == null) {
-            return BigDecimal.ZERO;
-        }
-        BigDecimal factor = BigDecimal.ONE.add(obtenerIgvPorcentaje().divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP));
-        return totalConIgv.divide(factor, 2, RoundingMode.HALF_UP);
+/**
+ * IGV de una linea de detalle. Se calcula sobre la base imponible de esa linea
+ * y se redondea a 2 decimales, que es lo que exige SUNAT.
+ * Ej: importe 90.00 con 18% -> igv 13.73
+ */
+@Transactional(readOnly = true)
+public BigDecimal calcularIgvDeLinea(BigDecimal importeConIgv) {
+    if (importeConIgv == null) {
+        return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     }
+    BigDecimal base = new BigDecimal("100").multiply(factor());
+    return importeConIgv.multiply(obtenerIgvPorcentaje()).divide(base, 2, RoundingMode.HALF_UP);
+}
 
-    @Transactional(readOnly = true)
-    public BigDecimal calcularIgv(BigDecimal totalConIgv) {
-        if (totalConIgv == null) {
-            return BigDecimal.ZERO;
-        }
-        return totalConIgv.subtract(calcularOpGravada(totalConIgv)).setScale(2, RoundingMode.HALF_UP);
+private BigDecimal factor() {
+        return BigDecimal.ONE.add(obtenerIgvPorcentaje().divide(new BigDecimal("100"), 6, RoundingMode.HALF_UP));
     }
 
     private BigDecimal leerDecimal(String texto, BigDecimal porDefecto) {

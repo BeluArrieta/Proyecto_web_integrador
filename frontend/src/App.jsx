@@ -7,6 +7,8 @@ import Historial from './pages/Historial';
 import Dashboard from './pages/Dashboard';
 import Comprobante from './pages/Comprobante';
 import Reportes from './pages/Reportes';
+import Inventario from './pages/Inventario';
+import Clientes from './pages/Clientes';
 import { useApp } from './context/AppContext';
 
 export default function App() {
@@ -35,10 +37,12 @@ export default function App() {
     if (vista === 'productos') return <Productos />;
     if (vista === 'carrito') return <Carrito setVista={cambiarVista} setVentaGenerada={setVentaGenerada} />;
     if (vista === 'historial') return <Historial setVista={cambiarVista} setVentaGenerada={setVentaGenerada} />;
-    if (vista === 'dashboard') return <Dashboard setVista={cambiarVista} />;
-    if (vista === 'reportes') return <Reportes />;
+    if (vista === 'dashboard') return <Dashboard setVista={cambiarVista} setVentaGenerada={setVentaGenerada} />;
+    if (vista === 'reportes') return <Reportes setVista={cambiarVista} setVentaGenerada={setVentaGenerada} />;
+    if (vista === 'inventario') return <Inventario />;
+    if (vista === 'clientes') return <Clientes setVista={cambiarVista} />;
     if (vista === 'comprobante') return <Comprobante venta={ventaGenerada} setVista={cambiarVista} />;
-    return esAdmin ? <Dashboard setVista={cambiarVista} /> : <Productos />;
+    return esAdmin ? <Dashboard setVista={cambiarVista} setVentaGenerada={setVentaGenerada} /> : <Productos />;
   }
 
   if (!sesion) {

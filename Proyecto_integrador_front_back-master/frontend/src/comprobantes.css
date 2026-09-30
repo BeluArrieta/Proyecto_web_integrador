@@ -1,0 +1,1307 @@
+/* ==========================================================================
+   Comprobantes SUNAT & Mejoras de UX/UI (TechZone)
+   ========================================================================== */
+
+.flex { display: flex; }
+.gap-2 { gap: 8px; }
+.justify-center { justify-content: center; }
+.textMuted { color: #64748b; }
+.textVerde { color: #10b981; }
+.textAzul { color: #2563eb; }
+.w-full { width: 100%; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mr-1 { margin-right: 4px; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.uppercase { text-transform: uppercase; }
+
+/* --------------------------------------------------------------------------
+   BARRA LATERAL (NAVBAR)
+   -------------------------------------------------------------------------- */
+.sidebar .menuBoton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #cbd5e1;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar .menuBoton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.sidebar .menuBoton.activo {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.badgeContador {
+  margin-left: auto;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.usuarioInfoFila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usuarioNombres {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.usuarioNombres strong {
+  font-size: 14px;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.usuarioRolBadge {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   COMPROBANTE CONTROL BAR
+   -------------------------------------------------------------------------- */
+.comprobanteSeccion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.comprobanteControlBar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px 24px;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.comprobanteTituloInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btnIconoRegresar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: grid;
+  place-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.comprobanteTituloInfo h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.comprobanteTituloInfo .subtitulo {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.comprobanteSelectorVentaBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.comprobanteSelectorVentaBox select {
+  padding: 7px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #f8fafc;
+  outline: none;
+}
+
+.tipoDocToggleGroup {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  gap: 4px;
+}
+
+.btnToggleDoc {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  color: #475569;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btnToggleDoc.activo {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.comprobanteSelectorWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.comprobanteSelector {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  gap: 4px;
+}
+
+.btnSelectorFormato {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  color: #475569;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btnSelectorFormato.activo {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comprobanteAcciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comprobantePrevisualizacion {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 60px;
+}
+
+/* --------------------------------------------------------------------------
+   FORMATO A4 (RÉPLICA EXACTA IMAGEN 1)
+   -------------------------------------------------------------------------- */
+.a4ComprobanteWrapper {
+  background: #ffffff;
+  width: 100%;
+  max-width: 820px;
+  padding: 36px 40px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  border: 1px solid #d1d5db;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+.a4Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.a4LogoBox {
+  flex-shrink: 0;
+}
+
+.a4EmpresaInfo {
+  flex: 1;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #1f2937;
+}
+
+.a4NombreComercial {
+  font-size: 16px;
+  font-weight: 900;
+  color: #000000;
+  margin: 0 0 2px;
+}
+
+.a4RazonSocial {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.a4RucBox {
+  border: 1.5px solid #000000;
+  border-radius: 12px;
+  padding: 12px 20px;
+  text-align: center;
+  min-width: 250px;
+  box-sizing: border-box;
+}
+
+.a4RucNumero {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.a4TipoComprobante {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.a4Correlativo {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.a4ClienteBox {
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.a4FilaDato {
+  display: flex;
+  align-items: baseline;
+}
+
+.a4Label {
+  width: 90px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.a4Separador {
+  width: 14px;
+}
+
+.a4Valor {
+  flex: 1;
+  color: #111827;
+}
+
+.a4ObservacionesHeader {
+  font-size: 11.5px;
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+
+.a4ObservacionesTexto {
+  font-size: 11px;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+.a4TablaCondiciones {
+  border: 1px solid #000000;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.a4TablaCondiciones table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.a4TablaCondiciones th {
+  background: #ffffff;
+  color: #000000;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-align: center;
+  padding: 6px 4px;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.a4TablaCondiciones th:last-child {
+  border-right: none;
+}
+
+.a4TablaCondiciones td {
+  font-size: 10.5px;
+  text-align: center;
+  padding: 6px 4px;
+  border-right: 1px solid #000000;
+}
+
+.a4TablaCondiciones td:last-child {
+  border-right: none;
+}
+
+.a4TablaProductosWrapper {
+  border: 1px solid #000000;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  min-height: 280px;
+}
+
+.a4TablaProductos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.a4TablaProductos th {
+  background: #ffffff;
+  color: #000000;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 7px 8px;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.a4TablaProductos th:last-child {
+  border-right: none;
+}
+
+.a4TablaProductos td {
+  font-size: 10.5px;
+  padding: 6px 8px;
+  border-right: 1px solid #000000;
+  border-bottom: none;
+}
+
+.a4TablaProductos td:last-child {
+  border-right: none;
+}
+
+.a4FilaEspacio td {
+  height: 200px;
+  border-right: 1px solid #000000;
+}
+
+.a4FilaEspacio td:last-child {
+  border-right: none;
+}
+
+.a4PieDoc {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 6px;
+}
+
+.a4PieIzquierda {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.a4MontoLetras {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #000000;
+}
+
+.a4QrContenedor {
+  width: 120px;
+  height: 120px;
+}
+
+.a4QrImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.a4PieDerecha {
+  width: 250px;
+}
+
+.a4LineaTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 0;
+}
+
+.a4SeparadorTotales {
+  border-bottom: 1.5px solid #000000;
+  margin: 3px 0;
+}
+
+.a4ImporteFinal {
+  font-size: 11.5px;
+  font-weight: 900;
+}
+
+/* --------------------------------------------------------------------------
+   FORMATO TICKET (RÉPLICA EXACTA IMAGEN 2)
+   -------------------------------------------------------------------------- */
+.ticketWrapper {
+  background: #ffffff;
+  width: 320px;
+  padding: 24px 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px dashed #94a3b8;
+  font-family: 'Courier New', Courier, monospace, sans-serif;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.ticketLogo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.ticketCentro {
+  text-align: center;
+}
+
+.ticketBold {
+  font-weight: 900;
+}
+
+.ticketTituloEmisor {
+  font-size: 14px;
+}
+
+.ticketBloqueTitulo {
+  margin: 12px 0 8px;
+}
+
+.ticketDocumentoTipo {
+  font-size: 13px;
+  letter-spacing: -0.3px;
+}
+
+.ticketDocumentoSerie {
+  font-size: 13px;
+}
+
+.ticketDatosCliente {
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.ticketSeparador {
+  border-bottom: 1px dashed #000000;
+  margin: 10px 0;
+}
+
+.ticketTablaHeader {
+  display: grid;
+  grid-template-columns: 35px 35px 1fr 45px 45px;
+  font-weight: 900;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+.ticketDescripcionLabel {
+  font-weight: 900;
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+.ticketItemFila {
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+
+.ticketItemValores {
+  display: grid;
+  grid-template-columns: 35px 35px 1fr 45px 45px;
+}
+
+.ticketItemNombre {
+  font-weight: 600;
+  padding-left: 2px;
+}
+
+.ticketTotales {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ticketFilaTotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 10.5px;
+}
+
+.ticketTotalFinal {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.ticketPagoInfo {
+  font-size: 10px;
+  line-height: 1.4;
+  margin: 8px 0;
+}
+
+.ticketQrBox {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.ticketQrImg {
+  width: 120px;
+  height: 120px;
+}
+
+.ticketPie {
+  text-align: center;
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: #374151;
+}
+
+.ticketMiFactLogo {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   MÓDULO DE REPORTES SUNAT & LIQUIDACIÓN TRIBUTARIA
+   -------------------------------------------------------------------------- */
+.panelTributarioSunat {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.panelTributarioHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.iconoSunatBadge {
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.panelTributarioHeader h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.panelTributarioHeader p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+.desgloseSunatGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.sunatItem {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sunatItem span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.sunatItem strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Impresión del Reporte */
+.soloImpresionReporte {
+  display: none;
+}
+
+@media print {
+  .no-print,
+  .sidebar,
+  .comprobanteControlBar,
+  .btnPrincipal,
+  .btnSecundario,
+  .btnVerComprobante,
+  .menu,
+  .usuarioBox {
+    display: none !important;
+  }
+
+  .appLayout {
+    display: block !important;
+  }
+
+  .contenido {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .impresion-a4 {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8mm 12mm !important;
+  }
+
+  .impresion-ticket {
+    box-shadow: none !important;
+    border: none !important;
+    width: 78mm !important;
+    max-width: 78mm !important;
+    padding: 2mm !important;
+    margin: 0 auto !important;
+  }
+
+  /* Vista de impresión formal del reporte */
+  .soloImpresionReporte {
+    display: block !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 10mm 15mm !important;
+    font-family: Arial, sans-serif !important;
+  }
+
+  .reporteImpresoHeader {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 12px !important;
+  }
+
+  .tablaImpresaReporte {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 10px 0 16px !important;
+  }
+
+  .tablaImpresaReporte th,
+  .tablaImpresaReporte td {
+    border: 1px solid #000000 !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .tablaImpresaReporte th {
+    background: #f1f5f9 !important;
+    font-weight: 800 !important;
+  }
+
+  .firmasReporteImpreso {
+    display: flex !important;
+    justify-content: space-around !important;
+    margin-top: 50px !important;
+  }
+
+  .firmaBox {
+    text-align: center !important;
+    width: 200px !important;
+  }
+
+  .lineaFirma {
+    border-top: 1px solid #000000 !important;
+    margin-bottom: 6px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MÓDULO DE INVENTARIO & PRODUCTOS (ADMIN)
+   -------------------------------------------------------------------------- */
+.productoNombreTabla {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.badgeStockTabla {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  border-radius: 999px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+.badgeStockTabla.disponible {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+}
+
+.badgeStockTabla.stockBajo {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+  border: 1px solid #fde047 !important;
+}
+
+.badgeStockTabla.agotado {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+.filtroTipoTabs {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tabFiltro {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  color: #475569;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tabFiltro:hover {
+  background: rgba(255, 255, 255, 0.6);
+  color: #0f172a;
+}
+
+.tabFiltro.activo {
+  background: #ffffff;
+  color: #2563eb;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btnIconoTabla {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btnEditar {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.btnEditar:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btnEliminar {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.btnEliminar:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.modalContenido {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: modalEntrada 0.2s ease-out;
+}
+
+@keyframes modalEntrada {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modalHeader h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.btnCerrarModal {
+  padding: 6px;
+  color: #64748b;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modalFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridDosCampos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modalAcciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   MÓDULO DE CLIENTES (ADMIN)
+   -------------------------------------------------------------------------- */
+.badgeContadorGeneral {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.clientesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.clienteCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clienteCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.clienteAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.clienteInfo {
+  flex: 1;
+  overflow: hidden;
+}
+
+.clienteIdTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.clienteInfo h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #0f172a;
+}
+
+.clienteDetalles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.clienteDatoItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   ESTILOS DE VALIDACIONES, INPUTS & FORMULARIOS
+   -------------------------------------------------------------------------- */
+.campoGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.campoGrupo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.inputConError {
+  border: 1.5px solid #ef4444 !important;
+  background-color: #fef2f2 !important;
+  outline: none !important;
+}
+
+.inputConError:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+.mensajeErrorCampo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #ef4444;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.desglosePreciosBox {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 14px 0;
+}
+
+.filaDesglose {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   IMÁGENES DE PRODUCTOS & CATÁLOGO
+   -------------------------------------------------------------------------- */
+.productoCard {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.productoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  border-color: #cbd5e1;
+}
+
+.productoImagenContenedor {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.productoImgReal {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.productoCard:hover .productoImgReal {
+  transform: scale(1.06);
+}
+
+.productoThumbTabla {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: block;
+}
+
+.productoInfo {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.productoCategoriaPill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  display: inline-block;
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.productoNombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.productoDescripcion {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+.productoFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.productoPrecioBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.precioLabel {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.precioValor {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.btnAgregarCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnAgregarCard:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: scale(1.03);
+}
+
+.btnAgregarCard:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btnAgregado {
+  background: #10b981 !important;
+}
+
+.stockTag {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.stockTag.disponible {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.stockTag.stockBajo {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.stockTag.agotado {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* --------------------------------------------------------------------------
+   LOGIN LOGO & HERO MEJORADO
+   -------------------------------------------------------------------------- */
+.loginHeroLogoBox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.loginLogoImg {
+  height: 52px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logoHeaderSmall {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.logoSmallLogin {
+  height: 38px;
+  object-fit: contain;
+}
+

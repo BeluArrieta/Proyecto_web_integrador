@@ -32,11 +32,13 @@ export default function Navbar({ vista, setVista }) {
   return (
     <aside className="sidebar no-print">
       <div className="logoHeaderContainer">
-        <img
-          src="/logo.png"
-          alt="TechZone Logo"
-          className="navbarLogoImg"
-        />
+        <div className="navbarLogoBox">
+          <img
+            src="/logo.png"
+            alt="TechZone Logo"
+            className="navbarLogoImg"
+          />
+        </div>
         <div className="navbarRolBadgeBox">
           <span className="navbarRolBadge">{esAdmin ? 'MODO ADMINISTRADOR' : 'TIENDA & FACTURACIÓN'}</span>
         </div>

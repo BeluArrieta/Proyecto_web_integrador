@@ -41,7 +41,7 @@ const IMAGENES_PRODUCTOS = {
   'router tp-link': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&auto=format&fit=crop&q=80',
   'router': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&auto=format&fit=crop&q=80',
   'cable hdmi': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop&q=80',
-  'silla gamer': 'https://images.unsplash.com/photo-1598550476439-6847785fdd52?w=600&auto=format&fit=crop&q=80'
+  'silla gamer': 'https://dtotec.pe/products/silla-gamer-all-black-kuzler'
 };
 
 const IMAGEN_DEFAULT_TECH = 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600&auto=format&fit=crop&q=80';

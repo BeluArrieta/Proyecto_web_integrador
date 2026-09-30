@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Boxes, Edit2, PackagePlus, Plus, Search, Trash2, X } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Boxes, Edit2, PackagePlus, Plus, Search, Trash2, X } from 'lucide-react';
 import { productoService } from '../services/api';
 import { formatoMoneda } from '../utils/format';
 import Alerta from '../components/Alerta';
+import { obtenerImagenProducto } from '../utils/productImages';
 
 export default function Inventario() {
   const [productos, setProductos] = useState([]);
@@ -23,6 +24,7 @@ export default function Inventario() {
     precio: '',
     categoria: 'Laptops'
   });
+  const [erroresModal, setErroresModal] = useState({});
 
   useEffect(() => {
     cargarProductos();
@@ -60,6 +62,7 @@ export default function Inventario() {
       precio: '',
       categoria: 'Laptops'
     });
+    setErroresModal({});
     setModalAbierto(true);
     setMensaje('');
     setExito('');
@@ -74,13 +77,39 @@ export default function Inventario() {
       precio: prod.precio,
       categoria: prod.categoria || 'General'
     });
+    setErroresModal({});
     setModalAbierto(true);
     setMensaje('');
     setExito('');
   }
 
+  function validarModal() {
+    const errores = {};
+    if (!form.nombre || form.nombre.trim().length < 3) {
+      errores.nombre = 'El nombre debe tener al menos 3 caracteres.';
+    }
+    const precioNum = Number(form.precio);
+    if (isNaN(precioNum) || precioNum <= 0) {
+      errores.precio = 'El precio debe ser mayor a 0.';
+    }
+    const stockNum = Number(form.stock);
+    if (isNaN(stockNum) || !Number.isInteger(stockNum) || stockNum < 0) {
+      errores.stock = 'El stock debe ser un entero mayor o igual a 0.';
+    }
+    if (!form.categoria || form.categoria.trim() === '') {
+      errores.categoria = 'La categoría es requerida.';
+    }
+    setErroresModal(errores);
+    return Object.keys(errores).length === 0;
+  }
+
   async function guardarProducto(e) {
     e.preventDefault();
+    
+    if (!validarModal()) {
+      return;
+    }
+
     setGuardando(true);
     setMensaje('');
     setExito('');
@@ -177,6 +206,7 @@ export default function Inventario() {
           <table>
             <thead>
               <tr>
+                <th style={{ width: 65 }}>Foto</th>
                 <th style={{ width: '80px' }}>ID</th>
                 <th>Nombre del Producto</th>
                 <th>Categoría</th>
@@ -194,6 +224,11 @@ export default function Inventario() {
 
                 return (
                   <tr key={prod.idProducto} className="filaHistorial">
+                    <td>
+                      <img src={obtenerImagenProducto(prod)} alt={prod.nombre}
+                        style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 8, border: '1px solid #e2e8f0', display: 'block' }}
+                        onError={e => { e.target.src = 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=100&auto=format&fit=crop&q=80'; }} />
+                    </td>
                     <td><strong>#{prod.idProducto}</strong></td>
                     <td>
                       <strong className="productoNombreTabla">{prod.nombre}</strong>
@@ -208,7 +243,20 @@ export default function Inventario() {
                       <strong>{stockNum} unidades</strong>
                     </td>
                     <td>
-                      <span className={`stockTag ${agotado ? 'agotado' : stockBajo ? 'stockBajo' : 'disponible'}`}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '4px 12px',
+                        borderRadius: '999px',
+                        fontSize: '11.5px',
+                        fontWeight: 700,
+                        lineHeight: '1.2',
+                        background: agotado ? '#fee2e2' : stockBajo ? '#fef3c7' : '#dcfce7',
+                        color: agotado ? '#b91c1c' : stockBajo ? '#b45309' : '#15803d',
+                        border: `1px solid ${agotado ? '#fca5a5' : stockBajo ? '#fde047' : '#86efac'}`,
+                        position: 'static'
+                      }}>
                         {agotado ? 'Agotado' : stockBajo ? 'Stock Crítico' : 'Disponible'}
                       </span>
                     </td>
@@ -264,22 +312,32 @@ export default function Inventario() {
               <label>
                 Nombre del Producto
                 <input
+                  className={erroresModal.nombre ? 'inputConError' : ''}
                   value={form.nombre}
-                  onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                  onChange={(e) => {
+                    setForm({ ...form, nombre: e.target.value });
+                    if (erroresModal.nombre) setErroresModal({ ...erroresModal, nombre: null });
+                  }}
                   placeholder="Ej: Laptop Lenovo ThinkPad"
                   required
                 />
+                {erroresModal.nombre && <div className="mensajeErrorCampo"><AlertCircle size={13}/> {erroresModal.nombre}</div>}
               </label>
 
               <div className="gridDosCampos">
                 <label>
                   Categoría
                   <input
+                    className={erroresModal.categoria ? 'inputConError' : ''}
                     value={form.categoria}
-                    onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+                    onChange={(e) => {
+                      setForm({ ...form, categoria: e.target.value });
+                      if (erroresModal.categoria) setErroresModal({ ...erroresModal, categoria: null });
+                    }}
                     placeholder="Ej: Laptops, Audio, Gaming"
                     required
                   />
+                  {erroresModal.categoria && <div className="mensajeErrorCampo"><AlertCircle size={13}/> {erroresModal.categoria}</div>}
                 </label>
 
                 <label>
@@ -288,11 +346,16 @@ export default function Inventario() {
                     type="number"
                     step="0.01"
                     min="0"
+                    className={erroresModal.precio ? 'inputConError' : ''}
                     value={form.precio}
-                    onChange={(e) => setForm({ ...form, precio: e.target.value })}
+                    onChange={(e) => {
+                      setForm({ ...form, precio: e.target.value });
+                      if (erroresModal.precio) setErroresModal({ ...erroresModal, precio: null });
+                    }}
                     placeholder="Ej: 150.00"
                     required
                   />
+                  {erroresModal.precio && <div className="mensajeErrorCampo"><AlertCircle size={13}/> {erroresModal.precio}</div>}
                 </label>
               </div>
 
@@ -301,10 +364,15 @@ export default function Inventario() {
                 <input
                   type="number"
                   min="0"
+                  className={erroresModal.stock ? 'inputConError' : ''}
                   value={form.stock}
-                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                  onChange={(e) => {
+                    setForm({ ...form, stock: e.target.value });
+                    if (erroresModal.stock) setErroresModal({ ...erroresModal, stock: null });
+                  }}
                   required
                 />
+                {erroresModal.stock && <div className="mensajeErrorCampo"><AlertCircle size={13}/> {erroresModal.stock}</div>}
               </label>
 
               <div className="modalAcciones">

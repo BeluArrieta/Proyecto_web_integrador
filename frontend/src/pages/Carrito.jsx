@@ -1,4 +1,4 @@
-import { CreditCard, Trash2, WalletCards } from 'lucide-react';
+import { CreditCard, Trash2, WalletCards, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { formatoMoneda } from '../utils/format';
@@ -10,6 +10,8 @@ export default function Carrito({ setVista, setVentaGenerada }) {
   const [tipoDocumento, setTipoDocumento] = useState('TD001');
   const [medioPago, setMedioPago] = useState('MP004');
   const [numeroDocumento, setNumeroDocumento] = useState('');
+  const [razonSocial, setRazonSocial] = useState('');
+  const [docError, setDocError] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [exito, setExito] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -22,6 +24,60 @@ export default function Carrito({ setVista, setVentaGenerada }) {
     { id: 'MP001', nombre: 'Efectivo' },
     { id: 'MP006', nombre: 'Transferencia' }
   ];
+
+  const subtotal = total / 1.18;
+  const igv = total - subtotal;
+
+  const handleDocumentChange = (e) => {
+    const val = e.target.value;
+    setNumeroDocumento(val);
+    validarDocumento(tipoDocumento, val);
+  };
+
+  const validarDocumento = (tipo, valor) => {
+    if (!valor) {
+      setDocError('El número de documento es obligatorio.');
+      return false;
+    }
+    if (tipo === 'TD001') {
+      const regex = /^\d{8}$/;
+      if (!regex.test(valor)) {
+        setDocError('El DNI debe tener exactamente 8 dígitos numéricos.');
+        return false;
+      }
+    } else if (tipo === 'TD002') {
+      const regex = /^(10|20)\d{9}$/;
+      if (!regex.test(valor)) {
+        setDocError('El RUC debe tener exactamente 11 dígitos y empezar con 10 o 20.');
+        return false;
+      }
+    }
+    setDocError('');
+    return true;
+  };
+
+  const handleTipoDocChange = (e) => {
+    const nuevoTipo = e.target.value;
+    setTipoDocumento(nuevoTipo);
+    setNumeroDocumento('');
+    setRazonSocial('');
+    setDocError('');
+  };
+
+  const handleCantidadChange = (id, stock, value) => {
+    const num = parseInt(value, 10);
+    if (isNaN(num)) {
+      cambiarCantidad(id, '');
+      return;
+    }
+    if (num < 1) {
+      cambiarCantidad(id, 1);
+    } else if (num > stock) {
+      cambiarCantidad(id, stock);
+    } else {
+      cambiarCantidad(id, num);
+    }
+  };
 
   async function registrarVenta() {
     setMensaje('');
@@ -38,11 +94,30 @@ export default function Carrito({ setVista, setVentaGenerada }) {
       return;
     }
 
+    // Validar stock
+    for (const item of carrito) {
+      if (item.cantidad > item.stock) {
+        setMensaje(`La cantidad del producto "${item.nombre}" supera el stock disponible (${item.stock}).`);
+        return;
+      }
+    }
+
+    if (!validarDocumento(tipoDocumento, numeroDocumento)) {
+      setMensaje('Corrige los errores en el documento antes de continuar.');
+      return;
+    }
+
+    if (tipoDocumento === 'TD002' && !razonSocial.trim()) {
+      setMensaje('La Razón Social es obligatoria para Factura.');
+      return;
+    }
+
     const request = {
       idCliente: cliente.id,
       tipoDocumento,
       medioPago,
       numeroDocumento,
+      razonSocial: tipoDocumento === 'TD002' ? razonSocial : undefined,
       items: carrito.map((item) => ({ idProducto: item.idProducto, cantidad: item.cantidad }))
     };
 
@@ -106,7 +181,7 @@ export default function Carrito({ setVista, setVentaGenerada }) {
                         min="1"
                         max={item.stock}
                         value={item.cantidad}
-                        onChange={(e) => cambiarCantidad(item.idProducto, e.target.value)}
+                        onChange={(e) => handleCantidadChange(item.idProducto, item.stock, e.target.value)}
                       />
                     </td>
                     <td>{formatoMoneda(Number(item.precio) * item.cantidad)}</td>
@@ -126,7 +201,7 @@ export default function Carrito({ setVista, setVentaGenerada }) {
             <h3>Pago</h3>
             <label>
               Tipo de documento
-              <select value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)}>
+              <select value={tipoDocumento} onChange={handleTipoDocChange}>
                 <option value="TD001">Boleta</option>
                 <option value="TD002">Factura</option>
               </select>
@@ -148,11 +223,30 @@ export default function Carrito({ setVista, setVentaGenerada }) {
             </label>
             <label>
               Número documento del cliente
-              <input value={numeroDocumento} onChange={(e) => setNumeroDocumento(e.target.value)} placeholder="DNI o RUC" />
+              <input value={numeroDocumento} onChange={handleDocumentChange} placeholder={tipoDocumento === 'TD001' ? "DNI (8 dígitos)" : "RUC (11 dígitos)"} />
+              {docError && <div style={{ color: 'red', fontSize: '0.85rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={14} />{docError}</div>}
             </label>
-            <div className="totalBox">
-              <span>Total</span>
-              <strong>{formatoMoneda(total)}</strong>
+            
+            {tipoDocumento === 'TD002' && (
+              <label>
+                Razón Social
+                <input value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} placeholder="Razón Social" />
+              </label>
+            )}
+
+            <div className="totalBox" style={{ flexDirection: 'column', gap: '8px', alignItems: 'stretch' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#666' }}>
+                <span>Op. Gravada</span>
+                <span>{formatoMoneda(subtotal)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#666' }}>
+                <span>IGV (18%)</span>
+                <span>{formatoMoneda(igv)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #eee', paddingTop: '8px', marginTop: '4px' }}>
+                <span>Total</span>
+                <strong>{formatoMoneda(total)}</strong>
+              </div>
             </div>
             <button className="btnPrincipal btnGrande" disabled={cargando} onClick={registrarVenta}>
               {cargando ? 'Registrando...' : 'Realizar pago'}

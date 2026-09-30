@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import ProductoCard from '../components/ProductoCard';
+import ProductoGridCard from '../components/ProductoGridCard';
 import Alerta from '../components/Alerta';
 import { productoService } from '../services/api';
 import { useApp } from '../context/AppContext';
@@ -68,7 +68,7 @@ export default function Productos() {
       ) : (
         <div className="productosGrid">
           {filtrados.map((producto) => (
-            <ProductoCard key={producto.idProducto} producto={producto} onAgregar={agregarProducto} />
+            <ProductoGridCard key={producto.idProducto} producto={producto} onAgregar={agregarProducto} />
           ))}
         </div>
       )}

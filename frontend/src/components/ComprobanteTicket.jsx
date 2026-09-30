@@ -10,13 +10,13 @@ export default function ComprobanteTicket({ venta }) {
   const tipoDocCodigo = esFactura ? '01' : '03';
 
   const emisor = {
-    nombre: 'DEMOMIFACT',
-    razonSocial: 'EMPRESA DEMO SAC',
+    nombre: 'TECHZONE',
+    razonSocial: 'TECHZONE SOLUTIONS S.A.C.',
     ruc: '20100100100',
-    direccion: 'CALLE LAS NORMAS 123',
+    direccion: 'CALLE LAS NORMAS 123 - LIMA',
     telefono: '987 654 321',
-    email: 'Administrador@facturas.net',
-    web: 'www.facturas.net',
+    email: 'ventas@techzone.pe',
+    web: 'www.techzone.pe',
     resolucion: 'Autorizado mediante Resolución 034-005-0007241'
   };
 
@@ -46,10 +46,10 @@ export default function ComprobanteTicket({ venta }) {
 
   const docCliente = venta?.docCliente || venta?.numeroDocumentoCliente || (esFactura ? '20601234567' : (venta?.idCliente?.replace(/\D/g, '') || '71262017'));
   const nombreCliente = venta?.cliente || 'CAMILO SANCHEZ';
-  const direccionCliente = venta?.direccionCliente || '---';
+  const direccionCliente = venta?.direccionCliente || 'CALLE LAS NORMAS 123';
   const medioPago = (venta?.medioPago || 'EFECTIVO').toUpperCase();
   const condicionPago = (venta?.condicionPago || 'CONTADO').toUpperCase();
-  const observaciones = venta?.observaciones || '';
+  const observaciones = venta?.observaciones || 'Venta efectuada en tienda virtual';
 
   useEffect(() => {
     const textoSunat = `${emisor.ruc}|${tipoDocCodigo}|${serie}|${correlativo}|${igvStr}|${totalStr}|${fechaStr}|${esFactura ? '6' : '1'}|${docCliente}|`;
@@ -62,18 +62,9 @@ export default function ComprobanteTicket({ venta }) {
 
   return (
     <div className="ticketWrapper impresion-ticket">
-      {/* Logo Superior */}
+      {/* Logo Oficial TechZone */}
       <div className="ticketLogo">
-        <svg width="170" height="52" viewBox="0 0 170 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="170" height="52" rx="4" fill="#000000" />
-          <g transform="translate(10, 9)">
-            <path d="M12 5 L22 11 L22 21 L12 27 L2 21 L2 11 Z" stroke="#EAB308" strokeWidth="2.8" fill="none" strokeLinejoin="round" />
-            <path d="M22 11 L32 17 L32 27 L22 33 L12 27" stroke="#F59E0B" strokeWidth="2.8" fill="none" strokeLinejoin="round" />
-            <path d="M7 14 L17 20 L17 25" stroke="#FDE047" strokeWidth="2" strokeLinecap="round" />
-          </g>
-          <text x="50" y="24" fill="#FFFFFF" fontSize="13" fontWeight="900" letterSpacing="1.2" fontFamily="'Courier New', monospace, sans-serif">HYDRA</text>
-          <text x="50" y="39" fill="#EAB308" fontSize="11" fontWeight="800" letterSpacing="1.8" fontFamily="'Courier New', monospace, sans-serif">COMPANY</text>
-        </svg>
+        <img src="/logo.png" alt="TechZone" className="ticketLogoImg" />
       </div>
 
       {/* Datos Emisor */}
@@ -187,9 +178,9 @@ export default function ComprobanteTicket({ venta }) {
         <p>{emisor.resolucion}</p>
         <div className="ticketMiFactLogo">
           <svg width="60" height="18" viewBox="0 0 60 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="6" cy="9" r="4.5" stroke="#0284c7" strokeWidth="2" fill="none" />
-            <circle cx="12" cy="9" r="4.5" stroke="#0ea5e9" strokeWidth="2" fill="none" />
-            <text x="21" y="13" fill="#0f172a" fontSize="10" fontWeight="bold" fontFamily="Arial">Mifact</text>
+            <circle cx="6" cy="9" r="4.5" stroke="#00F0FF" strokeWidth="2" fill="none" />
+            <circle cx="12" cy="9" r="4.5" stroke="#0284c7" strokeWidth="2" fill="none" />
+            <text x="21" y="13" fill="#0f172a" fontSize="10" fontWeight="bold" fontFamily="Arial">TechZone</text>
           </svg>
         </div>
       </div>

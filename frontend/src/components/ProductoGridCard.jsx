@@ -3,7 +3,7 @@ import { Check, ShoppingCart } from 'lucide-react';
 import { formatoMoneda } from '../utils/format';
 import { obtenerImagenProducto } from '../utils/productImages';
 
-export default function ProductoCard({ producto, onAgregar }) {
+export default function ProductoGridCard({ producto, onAgregar }) {
   const [agregado, setAgregado] = useState(false);
   const stockNum = Number(producto.stock || 0);
   const agotado = stockNum <= 0;

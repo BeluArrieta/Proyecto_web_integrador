@@ -9,15 +9,15 @@ export default function ComprobanteA4({ venta }) {
   const tipoTitulo = esFactura ? 'FACTURA ELECTRÓNICA' : 'BOLETA DE VENTA ELECTRÓNICA';
   const tipoDocCodigo = esFactura ? '01' : '03';
 
-  // Configuración de emisor (réplica idéntica a la imagen)
+  // Configuración oficial de emisor TechZone
   const emisor = {
-    nombre: 'DEMOMIFACT',
-    razonSocial: 'EMPRESA DEMO SAC',
+    nombre: 'TECHZONE',
+    razonSocial: 'TECHZONE SOLUTIONS S.A.C.',
     ruc: '20100100100',
-    direccion: 'CALLE LAS NORMAS 123',
+    direccion: 'CALLE LAS NORMAS 123, LIMA - PERÚ',
     telefono: '987 654 321',
-    email: 'Administrador@facturas.net',
-    web: 'www.facturas.net'
+    email: 'ventas@techzone.pe',
+    web: 'www.techzone.pe'
   };
 
   // Desglose de serie y correlativo
@@ -45,16 +45,14 @@ export default function ComprobanteA4({ venta }) {
   const fechaVencimientoStr = fechaEmisionStr;
   const montoEnLetras = numeroALetras(totalNum);
 
-  // Documento del cliente (DNI para boleta, RUC para factura)
   const docCliente = venta?.docCliente || venta?.numeroDocumentoCliente || (esFactura ? '20601234567' : (venta?.idCliente?.replace(/\D/g, '') || '71262017'));
   const nombreCliente = venta?.cliente || 'CAMILO SANCHEZ';
-  const direccionCliente = venta?.direccionCliente || '---';
+  const direccionCliente = venta?.direccionCliente || 'CALLE LAS NORMAS 123, LIMA';
   const condicionPago = venta?.condicionPago || 'CONTADO';
-  const ordenCompra = venta?.ordenCompra || '---';
+  const ordenCompra = venta?.ordenCompra || 'OC-2026-001';
   const guia = venta?.guiaRemision || '---';
-  const observaciones = venta?.observaciones || '';
+  const observaciones = venta?.observaciones || 'Venta efectuada a través de la plataforma virtual TechZone';
 
-  // Generación del QR según estándar SUNAT
   useEffect(() => {
     const textoSunat = `${emisor.ruc}|${tipoDocCodigo}|${serie}|${correlativo}|${igvStr}|${totalStr}|${fechaEmisionStr}|${esFactura ? '6' : '1'}|${docCliente}|`;
     QRCode.toDataURL(textoSunat, { width: 140, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err, url) => {
@@ -68,18 +66,9 @@ export default function ComprobanteA4({ venta }) {
     <div className="a4ComprobanteWrapper impresion-a4">
       {/* Encabezado Superior */}
       <div className="a4Header">
-        {/* Logo */}
+        {/* Logo Oficial TechZone */}
         <div className="a4LogoBox">
-          <svg width="190" height="58" viewBox="0 0 190 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="190" height="58" rx="5" fill="#0a0a0a" />
-            <g transform="translate(12, 11)">
-              <path d="M14 6 L25 12 L25 24 L14 30 L3 24 L3 12 Z" stroke="#EAB308" strokeWidth="3" fill="none" strokeLinejoin="round" />
-              <path d="M25 12 L36 18 L36 30 L25 36 L14 30" stroke="#F59E0B" strokeWidth="3" fill="none" strokeLinejoin="round" />
-              <path d="M9 15 L19 21 L19 27" stroke="#FDE047" strokeWidth="2.5" strokeLinecap="round" />
-            </g>
-            <text x="58" y="27" fill="#FFFFFF" fontSize="15" fontWeight="900" letterSpacing="1.5" fontFamily="'Inter', Arial, sans-serif">HYDRA</text>
-            <text x="58" y="44" fill="#EAB308" fontSize="13" fontWeight="800" letterSpacing="2" fontFamily="'Inter', Arial, sans-serif">COMPANY</text>
-          </svg>
+          <img src="/logo.png" alt="TechZone Logo" className="a4LogoImg" />
         </div>
 
         {/* Datos de la Empresa Emisora */}
@@ -181,7 +170,6 @@ export default function ComprobanteA4({ venta }) {
                 <td className="text-right">20.00</td>
               </tr>
             )}
-            {/* Espacio en blanco característico de las facturas impresas */}
             <tr className="a4FilaEspacio">
               <td colSpan={5}></td>
             </tr>
